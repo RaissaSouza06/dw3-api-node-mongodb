@@ -1,6 +1,9 @@
 // importando o service 
 import gameService from "../services/gameService.js";
 
+// importando o ObjecteId
+import {ObjectId} from "mongodb";
+
 // função para tratar a requisição de LISTAR os jogos
 const getAllGames = async (req, res) => {
     try {
@@ -24,7 +27,7 @@ const createGame = async(req,res) =>{
         await gameService.Create(title, platform, year, price)
         // await é mt usado em operações usando banco de dados
         // res.sendStatus(201) - api só retorna o status, sem json
-        res.Status(201).json({message: 'O jogo foi cadastrado com sucesso'})
+        res.status(201).json({message: 'O jogo foi cadastrado com sucesso'})
         // cod. 201 - CREATED  - um novo recurso foi criado no servidor 
     } catch (error) {
         console.log(error)
@@ -32,6 +35,41 @@ const createGame = async(req,res) =>{
     }
 }
 
+// função para deletar um jogo
+const deleteGame = async (req,res) => {
+    try {
+        // fazendo a validação do mongodb (abrir cmd e dar "npm install mongodb")
+        const id = req.params.id // id esta vindo da url
+        // validação do id 
+        if (ObjectId.isValid(id)) {
+            await gameService.Delete(id)
+            res.status(204).json({message: 'O jogo foi excluido com sucesso'})
+            // cod. 204 = no content
+        } else {
+            res.status(400).json({error: 'Ocorreu um erro na válidação da ID.'})
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error : 'Erro interno do servidor'})
+    }
+}
+
+// função para alterar um jogo
+const updateGame = async (req,res) => {
+    try {
+        const id = req.params.id
+        if (ObjectId.isValid(id)) {
+            const {title, platform, year,  price} = req.body
+            await gameService.Update(id, title, platform, year, price)
+            res.status(200).json({message: 'Jogo atualizado com sucesso'})
+        } else {
+            res.status(400).json({error: 'Ocorreu um erro na válidação da ID.'})    
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error: 'Erro interno do servidor.'})
+    }
+}
 
 
-export default { getAllGames, createGame }
+export default { getAllGames, createGame, deleteGame, updateGame}
