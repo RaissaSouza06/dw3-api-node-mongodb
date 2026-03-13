@@ -15,7 +15,6 @@ gameRoutes.post("/games", gameController.createGame)
 gameRoutes.delete("/games/:id", gameController.deleteGame) // id é um parametro obrigatório
 
 // endpoint para alterar um game
-gameRoutes.put("/games/:id", gameController.updateGame)
-
+gameRoutes.put("/games/:id", gameController.updateGame) // id é um parametro obrigatório
 
 export default gameRoutes;

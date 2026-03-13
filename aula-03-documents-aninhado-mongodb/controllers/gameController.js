@@ -2,8 +2,7 @@
 import gameService from "../services/gameService.js";
 
 // importando o ObjecteId
-import {ObjectId} from "mongodb";
-
+import { ObjectId } from "mongodb";
 
 // função para tratar a requisição de LISTAR os jogos
 const getAllGames = async (req, res) => {
@@ -24,8 +23,8 @@ const createGame = async(req,res) =>{
         // const title
         // const platforma -> pode fazer direto
         // coletando os dados do corpo da requisição
-        const {title, platform, year, price} = req.body
-        await gameService.Create(title, platform, year, price)
+        const {title, year, price, descriptions} = req.body
+        await gameService.Create(title, year, price, descriptions)
         // await é mt usado em operações usando banco de dados
         // res.sendStatus(201) - api só retorna o status, sem json
         res.status(201).json({message: 'O jogo foi cadastrado com sucesso'})
@@ -40,9 +39,8 @@ const createGame = async(req,res) =>{
 const deleteGame = async (req,res) => {
     try {
         // fazendo a validação do mongodb (abrir cmd e dar "npm install mongodb")
-        const id = req.params.id // id esta vindo da url
-        // validação do id 
-        if (ObjectId.isValid(id)) {
+        const id = req.params.id // id esta vindo da url 
+        if (ObjectId.isValid(id)) {// validação do id
             await gameService.Delete(id)
             res.status(204).json({message: 'O jogo foi excluido com sucesso'})
             // cod. 204 = no content
@@ -60,7 +58,8 @@ const updateGame = async (req,res) => {
     try {
         const id = req.params.id
         if (ObjectId.isValid(id)) {
-            const {title, platform, year,  price} = req.body
+            const {title, year, price, descriptions} = req.body
+            await gameService.Update(id, title, year, price, descriptions)
             res.status(200).json({message: 'Jogo atualizado com sucesso'})
         } else {
             res.status(400).json({error: 'Ocorreu um erro na válidação da ID.'})    
