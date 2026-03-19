@@ -9,4 +9,7 @@ import userController from "../controllers/userController.js";
 // endpoint para cadastrar usuario
 userRoutes.post("/users", userController.createUser)
 
+// endpoint para logar um usuario
+userRoutes.post("/auth", userController.loginUser)
+
 export default userRoutes;
